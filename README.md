@@ -282,7 +282,7 @@ In cases where method calls are being chained, some adopters of this style prefe
 (($ '#selektor').addClass 'klass').hide() # All calls
 ```
 
-The function grouping style is not recommended. However, **if the function grouping style is adopted for a particular project, be consistent with its usage.**
+The function grouping style is not allowed.
 
 <a name="strings"/>
 ## Strings
@@ -358,6 +358,9 @@ To iterate over the keys and values of objects:
 object = one: 1, two: 2
 alert("#{key} = #{value}") for key, value of object
 ```
+
+Prefer underscore/lodash expressions over comprehensions if performance is not your aim.
+Prefer comprehensions over explicit for-expressions in other cases.
 
 <a name="#extending_native_objects"/>
 ## Extending Native Objects
@@ -464,3 +467,83 @@ console.log args... # Yes
 [coffeescript-specific-style-guide]: http://awardwinningfjords.com/2011/05/13/coffeescript-specific-style-guide.html
 [coffeescript-faq]: https://github.com/jashkenas/coffee-script/wiki/FAQ
 [camel-case-variations]: http://en.wikipedia.org/wiki/CamelCase#Variations_and_synonyms
+
+<a name="angular.js"/>
+# Angular.JS additions
+
+## Angular Entities Names
+
+You should use camelCase for filters, directives and common services:
+
+    .filter('filterName', ...)
+    .direcitve('directiveName', ...)
+    .service('serviceName', ...)
+    .value('valueName', ...)
+
+But in some cases you should use PascalCase.
+
+For controller names (just because Angular.JS core team uses this conventions):
+
+    .controller("IAmControllerHahaha", ...)
+
+For a factory name if this factory returns constructor function like that:
+
+    .factory('IAmNonUsualService', ->
+      'dependency1'
+      (dependency1) ->
+        class IAmNonUsualService
+          constructor: (dto) ->
+          ...
+    )
+
+<a href='factory-with-a-class'>
+## Factory With a Class
+You should avoid to define more classes in one factory then one for easy testing purposes. One class = one factory.
+
+General pattern is here:
+
+    .factory('IAmNonUsualService', ->
+      'dependency1'
+      (dependency1) ->
+        class IAmNonUsualService
+          constructor: (dto) ->
+          ...
+    )
+
+Class name should be equal with factory name for habital view of coffeescript class inheritance:
+
+    .factory('IAmNonUsualServiceChild', ->
+      'IAmNonUsualService'
+      (IAmNonUsualService) ->
+        class IAmNonUsualServiceChild extends IAmNonUsualService
+          constructor: (dto) ->
+          ...
+    )
+
+## View Model
+You should avoid to define business process's methods of collection items on scope object. 
+Use transformResponse (http://docs.angularjs.org/api/ng.$http#parameters) for this entities to 
+represent them as view models. Any view model should be defined via **Factory With a Class** which is declared above.
+
+    .factory('EntityItem', ->
+      ->
+        class EntityItem
+          constructor: (dto) ->
+          ...
+          showDetails: ->
+          ...
+          moveToBasket: ->
+          ...
+          hide: ->
+          ...
+          otherBusinessOperation: ->
+    )
+
+
+## Enumerations
+All enumarations should be defined via Angular.JS constant entity and have 'Enum' suffix:
+
+    .constant('SexEnum', ->
+      'Male'   : 1
+      'Female' : 2
+    )
