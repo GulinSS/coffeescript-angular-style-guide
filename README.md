@@ -474,20 +474,27 @@ console.log args... # Yes
 ## Angular Entities Names
 
 You should use camelCase for filters, directives and common services:
-
+```coffeescript
+  app    
     .filter('filterName', ...)
     .direcitve('directiveName', ...)
     .service('serviceName', ...)
     .value('valueName', ...)
+```   
 
 But in some cases you should use PascalCase.
 
 For controller names (just because Angular.JS core team uses this conventions):
 
+```coffeescript
+  app
     .controller("IAmControllerHahaha", ...)
+```    
 
 For a factory name if this factory returns constructor function like that:
 
+```coffeescript
+  app
     .factory('IAmNonUsualService', ->
       'dependency1'
       (dependency1) ->
@@ -495,13 +502,15 @@ For a factory name if this factory returns constructor function like that:
           constructor: (dto) ->
           ...
     )
-
+```
 <a href='factory-with-a-class'>
 ## Factory With a Class
 You should avoid to define more classes in one factory then one for easy testing purposes. One class = one factory.
 
 General pattern is here:
 
+```coffeescript
+  app
     .factory('IAmNonUsualService', ->
       'dependency1'
       (dependency1) ->
@@ -509,9 +518,11 @@ General pattern is here:
           constructor: (dto) ->
           ...
     )
-
+```
 Class name should be equal with factory name for habital view of coffeescript class inheritance:
 
+```coffeescript
+  app
     .factory('IAmNonUsualServiceChild', ->
       'IAmNonUsualService'
       (IAmNonUsualService) ->
@@ -519,12 +530,14 @@ Class name should be equal with factory name for habital view of coffeescript cl
           constructor: (dto) ->
           ...
     )
-
+```
 ## View Model
 You should avoid to define business process's methods of collection items on scope object. 
 Use transformResponse (http://docs.angularjs.org/api/ng.$http#parameters) for this entities to 
 represent them as view models. Any view model should be defined via **Factory With a Class** which is declared above.
 
+```coffeescript
+  app
     .factory('EntityItem', ->
       ->
         class EntityItem
@@ -538,12 +551,15 @@ represent them as view models. Any view model should be defined via **Factory Wi
           ...
           otherBusinessOperation: ->
     )
-
+```
 
 ## Enumerations
 All enumarations should be defined via Angular.JS constant entity and have 'Enum' suffix:
 
+```coffeescript
+  app
     .constant('SexEnum', ->
       'Male'   : 1
       'Female' : 2
     )
+```    
